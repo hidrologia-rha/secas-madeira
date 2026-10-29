@@ -11,7 +11,7 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <style>
- :root{--cor:#0f2d4a;--suave:#5e6874}
+ :root{--cor:#0f2d4a;--suave:#5e6874;--fundo:#f6f7f9}
  *{box-sizing:border-box}
  html,body{height:100%}
  body{margin:0;font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:#1a1a1a;
@@ -106,7 +106,9 @@
  .aba-nota{font-size:11.5px;color:var(--suave);margin:0 0 4px}
  tr.sel td{background:rgba(0,0,0,.045);font-weight:600}
  td small{font-weight:600;margin-left:5px;font-size:11.5px}
- h2 i{font-style:normal}
+ h2{display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+ h2 span{float:none;white-space:nowrap}
+ .spark-info{font-size:11.5px;color:var(--suave);text-align:right;margin-top:2px}
  #amp{color:var(--cor);text-decoration:none;font-weight:600}
  #amp:hover{text-decoration:underline}
  #spark{height:64px}
@@ -125,7 +127,20 @@
  .eixo-anos{position:relative;height:16px;margin:3px 4px 0;font-size:11.5px;color:var(--suave)}
  .eixo-anos span{position:absolute;transform:translateX(-50%)}
  .eixo-y{display:flex;gap:18px;font-size:11.5px;color:var(--suave);margin-bottom:2px}
- @media(max-width:760px){ .tb-lab{display:none} .maptit{font-size:12px;max-width:calc(100% - 90px)} .serie-full{height:220px} }
+ @media(max-width:760px){
+   /* celular: cabeçalho compacto; Recorte/Escala e Mês acima do mapa, o resto do painel embaixo */
+   header{padding:10px 14px;gap:10px} header img{height:30px;padding:3px 5px}
+   header .tit h1{font-size:15px;line-height:1.25} header .tit p{display:none}
+   header .nav{margin-top:4px;gap:6px} header .nav a{flex:1;text-align:center;padding:9px 4px}
+   .wrap{background:var(--fundo)}
+   aside{display:contents}
+   aside>*{order:3;margin-left:16px;margin-right:16px;width:auto}
+   aside>label[for=rec],aside>#rec,aside>label[for=escala],aside>#escala,aside>label[for=periodo],aside>#periodo{order:1}
+   aside>select{font-size:16px;padding:9px}
+   aside>#spark,aside>input[type=range]{width:calc(100% - 32px)}
+   aside>.foot{margin-bottom:24px}
+   .mapbox{order:2;height:60vh;margin-top:14px}
+   .tb-lab{display:none} .maptit{font-size:12px;max-width:calc(100% - 90px)} .serie-full{height:220px} }
 </style>
 </head>
 <body>
@@ -153,8 +168,9 @@
     <div class="r" id="rank"></div>
   </div>
   <div class="dica" id="dica"></div>
-  <h2>Evolução do SPI médio <span><i id="sparkinfo"></i> · <a href="#" id="amp">ver tudo</a></span></h2>
+  <h2>Evolução do SPI médio <span><a href="#" id="amp" title="Ver a série completa desde 1981">ver tudo</a></span></h2>
   <svg id="spark"></svg>
+  <div class="spark-info" id="sparkinfo"></div>
   <div class="abas" role="tablist">
     <button class="on" role="tab" data-aba="a-res">Resumo</button>
     <button role="tab" data-aba="a-ext">Mais secos</button>
